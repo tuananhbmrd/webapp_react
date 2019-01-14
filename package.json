@@ -1,0 +1,27 @@
+{
+  "name": "web-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    ""
+  ],
+  "author": "tuananh.uet.6196@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "bower": "^1.8.4"
+  },
+  "dependencies": {
+    "bootstrap": "^4.2.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-scripts": "^2.1.3"
+  }
+}
