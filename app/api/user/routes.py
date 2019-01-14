@@ -6,7 +6,8 @@ from . import user_blp
 
 @user_blp.route("/get_all_users", methods=['GET', 'POST'])
 def get_all_users():
-    return controller.get_all_users()
+    users = controller.get_all_users()
+    return Response.jsonify(data=users)
     
 @user_blp.route("/save_new_uer", methods=['GET', 'POST'])
 def save_new_uer():
@@ -17,12 +18,7 @@ def save_new_uer():
 
 @user_blp.route("/get_a_user/<id>", methods=['GET', 'POST'])
 def get_a_user(id):
-    user = controller.get_a_user(id)
-    print("user: ", user)
-    if not user:
-        Response.bad_request()
-    else:
-        return user
+    return controller.get_a_user(id)
 
 @user_blp.route("/delete_user/<public_id>", methods=['GET', 'POST'])
 def delete_user(public_id):

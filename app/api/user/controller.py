@@ -1,7 +1,6 @@
 import uuid
 import datetime
 from flask import json
-
 from app.models import User,db
 from app.utils import Response
 from . import controller 
@@ -38,13 +37,21 @@ def delete_user_by_public_id(public_id):
 
     db.session.delete(user)
     db.session.commit()
-    return Response.jsonify(data=public_id)
+
+    return Response.jsonify("OK", "User is deleted.")
 
 def get_all_users():
+    user_list = User.query.all()
+    if not user_list:
+        return Response.bad_request()
     return User.query.all()
 
 def get_a_user(id):
-    return User.query.filter_by(id=id).first()
+    user = User.query.filter_by(id=id).first()
+    if not user:
+        Response.bad_request()
+    else:
+        return Response.jsonify(data=User.query.filter_by(id=id).first().to_json()) 
 
 def save_changes(data):
     db.session.add(data)
