@@ -1,4 +1,3 @@
-
 # User roles
 ROLE_ADMIN = 1
 ROLE_USER = 2
@@ -10,5 +9,5 @@ STATUS_UNAUTHORIZED = 401
 STATUS_FORBIDDEN = 403
 
 # Messages
-MESG_STUDY_NOT_FOUND = "Study name already exists."
+MESG_USER_NOT_FOUND = "User does not exist."
 MESG_STUDY_SHARE_YOURSELF = "Should not need share yourself."

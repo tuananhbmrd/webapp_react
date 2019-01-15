@@ -3,6 +3,7 @@ import datetime
 from flask import json
 from app.models import User,db
 from app.utils import Response
+from ... import constants
 from . import controller 
 
 
@@ -16,7 +17,6 @@ def save_new_uer(data):
             password_hash=data['password_hash'],
             registered_on=datetime.datetime.utcnow()
         )
-        print(new_user)
         save_changes(new_user)
         return Response.jsonify(data=new_user.to_json())
     else:
@@ -29,29 +29,28 @@ def save_new_uer(data):
 def delete_user_by_public_id(public_id):
     user = User.query.filter_by(public_id=public_id).first()
     if not user:
-        response_object = {
-            'status': 'fail',
-            'message': 'User does not exist.'
-        }
-        return Response.bad_request()
+        return Response.bad_request(message=constants.MESG_USER_NOT_FOUND)
 
     db.session.delete(user)
     db.session.commit()
-
     return Response.jsonify("OK", "User is deleted.")
 
 def get_all_users():
     user_list = User.query.all()
     if not user_list:
         return Response.bad_request()
-    return User.query.all()
+    else:
+        user_list = User.query.all()
+    
+    output = [user.to_json() for user in user_list]
+    return Response.jsonify(data=output)
 
 def get_a_user(id):
     user = User.query.filter_by(id=id).first()
     if not user:
-        Response.bad_request()
-    else:
-        return Response.jsonify(data=User.query.filter_by(id=id).first().to_json()) 
+        return Response.bad_request(message=constants.MESG_USER_NOT_FOUND)
+    user = User.query.filter_by(id=id).first().to_json()
+    return Response.jsonify(data=user) 
 
 def save_changes(data):
     db.session.add(data)

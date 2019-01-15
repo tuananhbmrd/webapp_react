@@ -19,6 +19,9 @@ def create_app():
 
 def register_blueprints(app):
     from app.api.user import user_blp
+    from app.api.auth import auth_blp
     from app.views import web_blp
+    
+    app.register_blueprint(auth_blp)
     app.register_blueprint(user_blp)
     app.register_blueprint(web_blp)
