@@ -4,8 +4,9 @@ from . import controller
 
 from . import auth_blp
 
-@auth_blp.route("/login", methods=['GET', 'POST'])
+@auth_blp.route("/user_login", methods=['GET', 'POST'])
 def user_login():
+    if not request:
+        return Response.bad_request()
     post_data = request.json
-    print("post_data: ", post_data)
     return controller.Auth.login_user(data=post_data)

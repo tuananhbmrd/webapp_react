@@ -1,4 +1,5 @@
 from ...models import User
+from app.utils import Response
 
 class Auth:
     
@@ -7,7 +8,8 @@ class Auth:
         try:
             # fetch the user data
             user = User.query.filter_by(email=data.get('email')).first()
-            print("User: ", user.check_password(data.get('password')))
+            print("user: ", user)
+            print("check: ", user.check_password(data.get('password')))
             if user and user.check_password(data.get('password')):
                 auth_token = User.encode_auth_token(user.id)
                 print("auth_token: ", auth_token)
@@ -17,21 +19,20 @@ class Auth:
                         'message': 'Successfully logged in.',
                         'Authorization': auth_token.decode()
                     }
-                    return response_object, 200
+                    return Response.jsonify(message=response_object)
             else:
                 response_object = {
                     'status': 'fail',
                     'message': 'email or password does not match.'
                 }
-                return response_object, 401
+                return Response.jsonify(message=response_object)
                 
         except Exception as e:
-            print(e)
             response_object = {
                 'status': 'fail',
                 'message': 'Try again'
             }
-            return response_object, 500
+            return Response.jsonify(message=response_object)
 
     @staticmethod
     def get_logged_in_user(new_request):

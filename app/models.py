@@ -21,13 +21,13 @@ class User(db.Model):
     def password(self):
         raise AttributeError('password: write-only field')
 
-
     @password.setter
     def password(self, password):
         self.password_hash = flask_bcrypt.generate_password_hash(password).decode('utf-8')
-        print("password_hash: ", self.password_hash)
 
     def check_password(self, password):
+        if not self.password_hash or not password:
+            return False
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
     def to_json(self):
@@ -38,6 +38,7 @@ class User(db.Model):
             "admin" : self.admin,
             "public_id" : self.public_id,
             "username" : self.username,
+            
         }
      
     @staticmethod

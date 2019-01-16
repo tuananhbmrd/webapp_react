@@ -14,7 +14,7 @@ def save_new_uer(data):
             public_id=str(uuid.uuid4()),
             email=data['email'],
             username=data['username'],
-            password_hash=data['password_hash'],
+            password=data['password_hash'],
             registered_on=datetime.datetime.utcnow()
         )
         save_changes(new_user)
