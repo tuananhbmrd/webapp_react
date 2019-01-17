@@ -14,17 +14,35 @@ def save_new_uer(data):
             public_id=str(uuid.uuid4()),
             email=data['email'],
             username=data['username'],
-            password=data['password_hash'],
-            registered_on=datetime.datetime.utcnow()
+            password=data['password'],
+            registered_on=datetime.datetime.utcnow(),
+            admin=data['admin']
         )
         save_changes(new_user)
-        return Response.jsonify(data=new_user.to_json())
+        return generate_token(new_user)
     else:
         response_object = {
             'status': 'fail',
             'message': 'User already exists.'
         }
         return Response.jsonify(message=response_object)
+        
+def get_all_users():
+    user_list = User.query.all()
+    if not user_list:
+        return Response.bad_request()
+    else:
+        user_list = User.query.all()
+    
+    output = [user.to_json() for user in user_list]
+    return Response.jsonify(data=output)
+    
+def get_a_user(id):
+    user = User.query.filter_by(id=id).first()
+    if not user:
+        return Response.bad_request(message=constants.MESG_USER_NOT_FOUND)
+    user = User.query.filter_by(id=id).first().to_json()
+    return Response.jsonify(data=user) 
 
 def delete_user_by_public_id(public_id):
     user = User.query.filter_by(public_id=public_id).first()
@@ -35,22 +53,22 @@ def delete_user_by_public_id(public_id):
     db.session.commit()
     return Response.jsonify("OK", "User is deleted.")
 
-def get_all_users():
-    user_list = User.query.all()
-    if not user_list:
-        return Response.bad_request()
-    else:
-        user_list = User.query.all()
-    
-    output = [user.to_json() for user in user_list]
-    return Response.jsonify(data=output)
-
-def get_a_user(id):
-    user = User.query.filter_by(id=id).first()
-    if not user:
-        return Response.bad_request(message=constants.MESG_USER_NOT_FOUND)
-    user = User.query.filter_by(id=id).first().to_json()
-    return Response.jsonify(data=user) 
+def generate_token(user):
+    try:
+        # generate the auth token
+        auth_token = User.encode_auth_token(user.id)
+        response_object = {
+            'status': 'success',
+            'message': 'Successfully registered.',
+            'Authorization': auth_token.decode()
+        }
+        return Response.jsonify(message=response_object)
+    except Exception as e:
+        response_object = {
+            'status': 'fail',
+            'message': 'Some error occurred. Please try again.'
+        }
+        return Response.jsonify(message=response_object)
 
 def save_changes(data):
     db.session.add(data)

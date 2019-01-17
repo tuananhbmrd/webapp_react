@@ -37,8 +37,7 @@ class User(db.Model):
             "registered_on" : str(self.registered_on),
             "admin" : self.admin,
             "public_id" : self.public_id,
-            "username" : self.username,
-            
+            "username" : self.username
         }
      
     @staticmethod
@@ -68,8 +67,10 @@ class User(db.Model):
         :param auth_token:
         :return: integer|string
         """
+        print("auth_token: ", auth_token)
         try:
             payload = jwt.decode(auth_token, key)
+            print("payload: ", payload)
             is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted_token:
                 return 'Token blacklisted. Please log in again.'
